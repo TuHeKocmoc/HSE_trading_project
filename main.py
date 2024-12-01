@@ -17,7 +17,14 @@ from dotenv import load_dotenv
 def get_transaction_data(coingecko_id):
     print("Получаю объем транзакций и circulating supply...")
     url = f"https://api.coingecko.com/api/v3/coins/{coingecko_id}"
-    response = requests.get(url)
+
+    try:
+        response = requests.get(url)
+    except requests.exceptions.ConnectionError as e:
+        print("Проблема: ", e)
+        print("Повторяю попытку...")
+        time.sleep(10)
+        return get_transaction_data(coingecko_id)
 
     if response.status_code in [429, 503, 504]:
         retry_after = response.headers.get('Retry-After')
