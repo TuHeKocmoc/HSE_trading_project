@@ -77,7 +77,7 @@ if os.path.exists(metrics_file):
 else:
     print('Начинаю обрабатывать акции...')
 
-    with (Client(TOKEN) as client):
+    with Client(TOKEN) as client:
         instruments = client.instruments.shares().instruments
 
         for stock in tqdm(instruments, desc="Акции", unit="акция"):
