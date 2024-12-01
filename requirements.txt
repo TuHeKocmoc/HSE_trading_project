@@ -8,3 +8,4 @@ tqdm~=4.67.1
 pycoingecko~=3.2.0
 python-okx~=0.3.3
 python-dotenv~=1.0.1
+tinkoff-investments~=0.2.0b108
