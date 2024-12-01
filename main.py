@@ -81,6 +81,26 @@ if os.path.exists(metrics_file):
     print(f"Файл {metrics_file} уже существует. "
           f"Пропускаю обработку акций и криптовалют...")
     metrics_df = pd.read_csv(metrics_file)
+    for _, row in metrics_df.iterrows():
+        if 'ticker' in row and pd.notna(row['ticker']):
+            all_metrics.append({
+                "ticker": row['ticker'],
+                "pe": row.get('pe', None),
+                "pb": row.get('pb', None),
+                "returns": row.get('returns', 0),
+                "liquidity": row.get('liquidity', 0),
+                "rating": row.get('rating', 0)
+            })
+        elif 'symbol' in row and pd.notna(row['symbol']):
+            all_metrics.append({
+                "symbol": row['symbol'],
+                "returns": row.get('returns', 0),
+                "volatility": row.get('volatility', 0),
+                "liquidity": row.get('liquidity', 0),
+                "rating": row.get('rating', 0)
+            })
+
+    print("Данные преобразованы в all_metrics!")
 else:
     print('Начинаю обрабатывать акции...')
 
@@ -295,6 +315,7 @@ else:
     metrics_df.to_csv(metrics_file, index=False, encoding="utf-8")
 
     print(f"Данные all_metrics сохранены в {metrics_file}")
+
 print('Начинаю делать портфолио...')
 
 total_capital = int(input("Введите капитал ($): "))
@@ -304,27 +325,36 @@ all_metrics.sort(key=lambda x: x['rating'], reverse=True)
 filtered_assets = [asset for asset in all_metrics
                    if asset.get('liquidity', 0) >= 10_000]
 
-max_capital_per_asset = total_capital * 0.3
+min_percentage = 1
+max_percentage = 30
+max_capital_per_asset = total_capital * max_percentage / 100
+min_capital_per_asset = total_capital * min_percentage / 100
 portfolio = []
-
 remaining_capital = total_capital
+N = min(10, len(filtered_assets))
+filtered_assets = filtered_assets[:N]
+total_weight = sum(range(1, N + 1))
 
-for asset in filtered_assets:
+for i, asset in enumerate(filtered_assets):
     if remaining_capital <= 0:
         break
-    allocation = min(max_capital_per_asset,
-                     remaining_capital / len(filtered_assets))
 
+    weight = N - i
+    percentage = (weight / total_weight) * 100
+    percentage = max(percentage, min_percentage)
+    percentage = min(percentage, max_percentage)
+
+    allocation = total_capital * (percentage / 100)
     allocation_after_commission = allocation * 0.9996
 
     portfolio.append({
         'asset': asset['ticker'] if 'ticker' in asset else asset['symbol'],
         'rating': asset['rating'],
         'allocation': allocation_after_commission,
-        'percentage': allocation_after_commission / total_capital * 100
+        'percentage': percentage
     })
 
-    remaining_capital -= allocation
+    remaining_capital -= allocation_after_commission
 
 total_percentage = sum(entry['percentage'] for entry in portfolio)
 
@@ -346,14 +376,13 @@ df = pd.DataFrame({
 file_name = "portfolio.csv"
 df.to_csv(file_name, index=False)
 print(f"Портфолио сохранено в файл: {file_name}")
-
-threshold = 1
-small_categories = df[df["Percentage (%)"] < threshold]
-other_percentage = small_categories["Percentage (%)"].sum()
-df = df[df["Percentage (%)"] >= threshold]
-new_row = pd.DataFrame([{"Asset": "Other",
-                         "Percentage (%)": other_percentage}])
-df = pd.concat([df, new_row], ignore_index=True)
+# threshold = 1
+# small_categories = df[df["Percentage (%)"] < threshold]
+# other_percentage = small_categories["Percentage (%)"].sum()
+# df = df[df["Percentage (%)"] >= threshold]
+# new_row = pd.DataFrame([{"Asset": "Other",
+#                          "Percentage (%)": other_percentage}])
+# df = pd.concat([df, new_row], ignore_index=True)
 
 plt.figure(figsize=(10, 10))
 plt.pie(
