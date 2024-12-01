@@ -297,7 +297,7 @@ else:
     print(f"Данные all_metrics сохранены в {metrics_file}")
 print('Начинаю делать портфолио...')
 
-total_capital = int(input("Введите капитал: "))
+total_capital = int(input("Введите капитал ($): "))
 
 all_metrics.sort(key=lambda x: x['rating'], reverse=True)
 
@@ -351,8 +351,9 @@ threshold = 1
 small_categories = df[df["Percentage (%)"] < threshold]
 other_percentage = small_categories["Percentage (%)"].sum()
 df = df[df["Percentage (%)"] >= threshold]
-df = df.append({"Asset": "Other", "Percentage (%)": other_percentage},
-               ignore_index=True)
+new_row = pd.DataFrame([{"Asset": "Other",
+                         "Percentage (%)": other_percentage}])
+df = pd.concat([df, new_row], ignore_index=True)
 
 plt.figure(figsize=(10, 10))
 plt.pie(
