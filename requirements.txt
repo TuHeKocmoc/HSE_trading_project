@@ -1,6 +1,6 @@
 pandas~=2.2.3
 numpy~=2.2.0rc1
-matplotlib~=3.10.0rc1
+matplotlib~=3.10.0
 requests~=2.32.3
 httpx~=0.28.0
 tinkoff~=0.1.1
