@@ -1,6 +1,6 @@
-pandas~=2.3.2
+pandas~=2.3.3
 numpy~=2.3.4
-matplotlib~=3.9.4
+matplotlib~=3.10.7
 requests~=2.32.5
 httpx~=0.28.1
 tinkoff~=0.1.1
@@ -8,4 +8,4 @@ tqdm~=4.67.1
 pycoingecko~=3.2.0
 python-okx~=0.4.0
 python-dotenv~=1.1.1
-tinkoff-investments~=0.2.0b116
+tinkoff-investments~=0.2.0b117
