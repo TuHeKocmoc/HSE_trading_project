@@ -9,6 +9,6 @@ python-okx~=0.4.1
 python-dotenv~=1.2.1
 cachetools~=7.0.1
 grpcio~=1.78.1
-protobuf~=6.33.5
+protobuf~=7.34.0
 python-dateutil~=2.9.0
 deprecation~=2.1.0
