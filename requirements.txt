@@ -1,6 +1,6 @@
 pandas~=3.0.2
 numpy~=2.4.4
-matplotlib~=3.10.8
+matplotlib~=3.10.9
 requests~=2.33.1
 httpx~=0.28.1
 tqdm~=4.67.3
