@@ -1,7 +1,7 @@
 pandas~=3.0.2
 numpy~=2.4.4
 matplotlib~=3.10.8
-requests~=2.33.1
+requests~=2.34.2
 httpx~=0.28.1
 tqdm~=4.67.3
 pycoingecko~=3.2.0
